@@ -32,6 +32,15 @@ module SerializationHelper
       end
     end
 
+    def dump_assets(filename)
+      disable_logger
+      f = File.open(filename, "a")
+      YamlDb::AssetDump.dump(f)
+      f.flush
+      f.close
+      reenable_logger
+    end
+
     def load(filename, truncate = true)
       disable_logger
       @loader.load(File.new(filename, "r"), truncate)
@@ -45,6 +54,12 @@ module SerializationHelper
         end
         @loader.load(File.new("#{dirname}/#{filename}", "r"), truncate)
       end   
+    end
+
+    def load_assets(filename, truncate = true)
+      disable_logger
+      YamlDb::AssetLoad.load(File.new(filename, "r"), truncate)
+      reenable_logger
     end
 
     def disable_logger
